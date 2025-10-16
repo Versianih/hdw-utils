@@ -15,6 +15,7 @@ class Port {
         void write(int value);
         int read();
         void toggle();
+        void writePwm();
         uint8_t getPin() const;
 
     private:

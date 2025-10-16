@@ -11,7 +11,7 @@ Port::Port(
     pinMode(_pin, _mode_type);
 }
 
-void Port::write(int value) {
+void Port::write(int value = 0) {
     if (_mode_type == OUTPUT) {
         if (_port_type == DIGITAL) {
             digitalWrite(_pin, value);
@@ -36,6 +36,14 @@ void Port::toggle() {
     if (_mode_type == OUTPUT && _port_type == DIGITAL) {
         digitalWrite(_pin, !digitalRead(_pin));
     }
+}
+
+void Port::writePwm(uint8_t percent_value = 0) {
+  if (_mode_type == OUTPUT) {
+    if (percent_value > 100) percent_value = 100;
+    uint8_t pwm_value = (percent_value * 255) / 100;
+    analogWrite(_pin, pwm_value);
+  }
 }
 
 uint8_t Port::getPin() const {
