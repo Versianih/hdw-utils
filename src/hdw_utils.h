@@ -27,9 +27,8 @@ class Port {
 
 /* Wait do */
 
-#define MAX_WAIT_DO_TASKS 10
-
+void initWaitDo(uint8_t max_wait_do_tasks);
 void waitDo(unsigned long milis, void (*function)());
-void checkWaitDoTasks(); // void loop();
+void checkWaitDo();
 
 #endif
