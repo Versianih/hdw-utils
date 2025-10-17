@@ -8,20 +8,20 @@
 
 /* Ports */
 
-class Port {
+class Pin {
     public:
-        Port(uint8_t pin, uint8_t mode_type, uint8_t port_type);
+        Pin(uint8_t pin, uint8_t mode_type, uint8_t pin_type);
 
         void write(int value);
         int read();
         void toggle();
-        void writePwm();
+        void writePwm(uint8_t percent_value);
         uint8_t getPin() const;
 
     private:
         uint8_t _pin;
         uint8_t _mode_type;
-        uint8_t _port_type;
+        uint8_t _pin_type;
 };
 
 

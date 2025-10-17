@@ -1,7 +1,7 @@
 #include <hdw_utils.h>
 
-Port LED1(18, OUTPUT, DIGITAL);
-Port BUTTON(17, INPUT_PULLUP, DIGITAL);
+Pin LED1(18, OUTPUT, DIGITAL);
+Pin BUTTON(17, INPUT_PULLUP, DIGITAL);
 
 void setup(){}
 
