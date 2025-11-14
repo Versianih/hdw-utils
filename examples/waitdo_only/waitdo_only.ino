@@ -1,11 +1,27 @@
-#include <hdw_utils.h>
+/*
+==============================================================================
+| This code prints "hello" every 4 seconds while it can perform other tasks. |
+==============================================================================
+*/
 
-void setup(){
-    initWaitDo(5);
+#include "hdw-utils.h"
+
+WaitDo wd(5);
+
+void setup() {
+    Serial.begin();
 }
 
-void loop(){
-    checkWaitDoTasks();
+void loop() {
+    wd.run();
 
-    delay(100);
+    wd.addTask(4000, printHello);
+    
+    Serial.println(".");
+    
+    delay(10);
+}
+
+void printHello(){
+    Serial.println("Hello");
 }

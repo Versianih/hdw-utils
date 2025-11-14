@@ -1,6 +1,6 @@
 #include "hdw_utils.h"
 
-/* Ports */
+/* Pin */
 
 Pin::Pin(
   uint8_t pin,
