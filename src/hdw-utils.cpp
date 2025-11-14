@@ -53,59 +53,37 @@ uint8_t Pin::getPin() const {
 
 /* Wait do */
 
-struct WaitDoTask {
-  unsigned long startTime;
-  unsigned long interval;
-  void (*function)();
-  bool active;
-};
+WaitDo::WaitDo(int maxWaitDoTasks): _maxWaitDoTasks(maxWaitDoTasks) {
+  _waitDoTasks = new WaitDoTask[maxWaitDoTasks];
 
-static WaitDoTask* waitDoTasks = nullptr;
-static uint8_t waitDoMaxTasks = 0;
-static bool waitDoInitialized = false;
-
-void initWaitDo(uint8_t max_wait_do_tasks) {
-  if (!waitDoInitialized) {
-    waitDoMaxTasks = max_wait_do_tasks;
-    waitDoTasks = new WaitDoTask[waitDoMaxTasks];
-
-    for (int i = 0; i < waitDoMaxTasks; i++) {
-      waitDoTasks[i].active = false;
-    }
-
-    waitDoInitialized = true;
+  for (int i = 0; i < _maxWaitDoTasks; i++) {
+    _waitDoTasks[i].active = false;
   }
 }
 
-void waitDo(unsigned long milis, void (*function)()) {
-  if (!waitDoInitialized) return;
+int WaitDo::addTask(unsigned long milis, void (*function)()){
+  for (int i = 0; i < _maxWaitDoTasks; i++) {
+    if (_waitDoTasks[i].active && _waitDoTasks[i].function == function) {
+      return 0;
+    }
 
-  for (int i = 0; i < waitDoMaxTasks; i++) {
-    if (waitDoTasks[i].active && waitDoTasks[i].function == function) {
-      return;
+    if (!_waitDoTasks[i].active) {
+      _waitDoTasks[i].startTime = millis();
+      _waitDoTasks[i].interval = milis;
+      _waitDoTasks[i].function = function;
+      _waitDoTasks[i].active = true;
+      return 0;
     }
   }
 
-  for (int i = 0; i < waitDoMaxTasks; i++) {
-    if (!waitDoTasks[i].active) {
-      waitDoTasks[i].startTime = millis();
-      waitDoTasks[i].interval = milis;
-      waitDoTasks[i].function = function;
-      waitDoTasks[i].active = true;
-      return;
-    }
-  }
-
-  Serial.println("waitDo: Nao ha slots disponiveis para novas tarefas.");
+  return 1; 
 }
 
-void checkWaitDo() {
-  if (!waitDoInitialized) return;
-
-  unsigned long currentMillis = millis();
+void WaitDo::run(){
+  unsigned long currentTime = millis();
   for (int i = 0; i < waitDoMaxTasks; i++) {
     if (waitDoTasks[i].active) {
-      if (currentMillis - waitDoTasks[i].startTime >= waitDoTasks[i].interval) {
+      if (currentTime - waitDoTasks[i].startTime >= waitDoTasks[i].interval) {
         waitDoTasks[i].function();
         waitDoTasks[i].active = false;
       }

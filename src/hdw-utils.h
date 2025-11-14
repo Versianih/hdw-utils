@@ -22,13 +22,27 @@ class Pin {
         uint8_t _pin;
         uint8_t _mode_type;
         uint8_t _pin_type;
-};
+}
 
 
 /* Wait do */
 
-void initWaitDo(uint8_t max_wait_do_tasks);
-void waitDo(unsigned long milis, void (*function)());
-void checkWaitDo();
+class WaitDo {
+    public:
+        struct WaitDoTask {
+            unsigned long startTime;
+            unsigned long interval;
+            void (*function)();
+            bool active;
+        };
+
+        WaitDo(int maxWaitDoTasks);
+        int addTask(unsigned long milis, void (*function)());
+        void run();
+
+    private:
+        int _maxWaitDoTasks;
+        WaitDoTask* _waitDoTasks;
+};
 
 #endif
