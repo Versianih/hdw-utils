@@ -6,7 +6,7 @@
 #define DIGITAL 0x0
 #define ANALOG 0x1
 
-/* Ports */
+/* Pin */
 
 class Pin {
     public:
@@ -22,7 +22,7 @@ class Pin {
         uint8_t _pin;
         uint8_t _mode_type;
         uint8_t _pin_type;
-}
+};
 
 
 /* Wait do */

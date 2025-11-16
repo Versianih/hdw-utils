@@ -81,11 +81,11 @@ int WaitDo::addTask(unsigned long milis, void (*function)()){
 
 void WaitDo::run(){
   unsigned long currentTime = millis();
-  for (int i = 0; i < waitDoMaxTasks; i++) {
-    if (waitDoTasks[i].active) {
-      if (currentTime - waitDoTasks[i].startTime >= waitDoTasks[i].interval) {
-        waitDoTasks[i].function();
-        waitDoTasks[i].active = false;
+  for (int i = 0; i < _maxWaitDoTasks; i++) {
+    if (_waitDoTasks[i].active) {
+      if (currentTime - _waitDoTasks[i].startTime >= _waitDoTasks[i].interval) {
+        _waitDoTasks[i].function();
+        _waitDoTasks[i].active = false;
       }
     }
   }
