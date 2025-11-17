@@ -15,7 +15,11 @@ class Pin {
         void write(int value);
         int read();
         void toggle();
+
         void writePwm(uint8_t percent_value);
+        int readDebounce(int readingsDebouncing = 5);
+        int readNormalizer(int readings = 5);
+        
         uint8_t getPin() const;
 
     private:
