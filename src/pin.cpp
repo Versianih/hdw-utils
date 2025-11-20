@@ -47,3 +47,30 @@ void Pin::writePwm(uint8_t percent_value = 0) {
 uint8_t Pin::getPin() const {
   return _pin;
 }
+
+int Pin::readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigned long delayMs = 10) {
+  if (readings == 0 || _pin_type != ANALOG) return 0;
+  acceptablePercentage = constrain(acceptablePercentage, 5, 100);
+  
+  int validReadings = 0, sumReading = 0, lastReading = 0;
+  
+  lastReading = this->read();
+  delay(delayMs);
+
+  while (validReadings < readings) {
+    int reading = this->read();
+    
+    int difference = abs(reading - lastReading);
+    int maxDifference = (lastReading * acceptablePercentage) / 100;
+    
+    if (difference <= maxDifference) {
+      sumReading += reading;
+      validReadings++;
+      lastReading = reading;
+    }
+    
+    delay(delayMs);
+  }
+  
+  return sumReading / readings;
+}

@@ -2,6 +2,7 @@
 #define HDW_UTILS_H
 
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #define DIGITAL 0x0
 #define ANALOG 0x1
@@ -17,8 +18,7 @@ class Pin {
         void toggle();
 
         void writePwm(uint8_t percent_value);
-        int readDebounce(int readingsDebouncing = 5);
-        int readNormalizer(int readings = 5);
+        int readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigned long delayMs = 10);
         
         uint8_t getPin() const;
 
