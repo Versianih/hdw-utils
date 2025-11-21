@@ -74,3 +74,15 @@ int Pin::readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigne
   
   return sumReading / readings;
 }
+
+void Pin::tone(unsigned int frequency, unsigned long duration = 0) {
+  if (duration == 0) {
+    ::tone(_pin, frequency);
+  } else {
+    ::tone(_pin, frequency, duration);
+  }
+}
+
+void Pin::noTone() {
+  ::noTone(_pin);
+}

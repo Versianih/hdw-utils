@@ -2,7 +2,6 @@
 #define HDW_UTILS_H
 
 #include <Arduino.h>
-#include <EEPROM.h>
 
 #define DIGITAL 0x0
 #define ANALOG 0x1
@@ -19,7 +18,9 @@ class Pin {
 
         void writePwm(uint8_t percent_value);
         int readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigned long delayMs = 10);
-        
+        void tone(unsigned int frequency, unsigned long duration = 0);
+        void noTone();
+
         uint8_t getPin() const;
 
     private:
