@@ -36,10 +36,10 @@ WaitDo wd(maxNumberOfTasks);
 
 ```cpp
 // Add a task
-wd.addTask(waitTime, function);
+wd.addTask(function, waitTime);
 ```
-- `waitTime`: Time in milliseconds to wait.
 - `function`: Function to be executed during the wait.
+- `waitTime`: Time in milliseconds to wait.
 
 ```cpp
 // Execute registered tasks
