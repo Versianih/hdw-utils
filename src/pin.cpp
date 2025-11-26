@@ -9,7 +9,7 @@ Pin::Pin(
   pinMode(_pin, _mode_type);
 }
 
-void Pin::write(int value = 0) {
+void Pin::write(int value) {
   if (_mode_type == OUTPUT) {
     if (_pin_type == DIGITAL) {
       digitalWrite(_pin, value);
@@ -36,7 +36,7 @@ void Pin::toggle() {
   }
 }
 
-void Pin::writePwm(uint8_t percent_value = 0) {
+void Pin::writePwm(uint8_t percent_value) {
   if (_mode_type == OUTPUT) { 
     if (percent_value > 100) percent_value = 100;
     uint8_t pwm_value = (percent_value * 255) / 100;
@@ -48,11 +48,14 @@ uint8_t Pin::getPin() const {
   return _pin;
 }
 
-int Pin::readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigned long delayMs = 10) {
+int Pin::readNormalizer(int readings, int acceptablePercentage, int maxConsecutiveRejections, unsigned long delayMs) {
   if (readings == 0 || _pin_type != ANALOG) return 0;
   acceptablePercentage = constrain(acceptablePercentage, 5, 100);
+  maxConsecutiveRejections = constrain(maxConsecutiveRejections, 2, 10);
   
   int validReadings = 0, sumReading = 0, lastReading = 0;
+  int consecutiveRejections = 0;
+  int lastRejectedReading = 0;
   
   lastReading = this->read();
   delay(delayMs);
@@ -67,6 +70,21 @@ int Pin::readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigne
       sumReading += reading;
       validReadings++;
       lastReading = reading;
+      consecutiveRejections = 0;
+    } else {
+      if (consecutiveRejections > 0 && abs(reading - lastRejectedReading) <= (reading * acceptablePercentage) / 100) {
+        consecutiveRejections++;
+      } else {
+        consecutiveRejections = 1;
+        lastRejectedReading = reading;
+      }
+      
+      if (consecutiveRejections >= maxConsecutiveRejections) {
+        sumReading += reading;
+        validReadings++;
+        lastReading = reading;
+        consecutiveRejections = 0;
+      }
     }
     
     delay(delayMs);
@@ -75,7 +93,8 @@ int Pin::readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigne
   return sumReading / readings;
 }
 
-void Pin::tone(unsigned int frequency, unsigned long duration = 0) {
+void Pin::tone(unsigned int frequency, unsigned long duration) {
+  if (_pin_type != DIGITAL || _mode_type != OUTPUT) return;
   if (duration == 0) {
     ::tone(_pin, frequency);
   } else {
@@ -84,5 +103,6 @@ void Pin::tone(unsigned int frequency, unsigned long duration = 0) {
 }
 
 void Pin::noTone() {
+  if (_pin_type != DIGITAL || _mode_type != OUTPUT) return;
   ::noTone(_pin);
 }
