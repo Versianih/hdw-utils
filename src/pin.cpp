@@ -48,11 +48,14 @@ uint8_t Pin::getPin() const {
   return _pin;
 }
 
-int Pin::readNormalizer(int readings, int acceptablePercentage, unsigned long delayMs) {
+int Pin::readNormalizer(int readings, int acceptablePercentage, int maxConsecutiveRejections, unsigned long delayMs) {
   if (readings == 0 || _pin_type != ANALOG) return 0;
   acceptablePercentage = constrain(acceptablePercentage, 5, 100);
+  maxConsecutiveRejections = constrain(maxConsecutiveRejections, 2, 10);
   
   int validReadings = 0, sumReading = 0, lastReading = 0;
+  int consecutiveRejections = 0;
+  int lastRejectedReading = 0;
   
   lastReading = this->read();
   delay(delayMs);
@@ -67,6 +70,21 @@ int Pin::readNormalizer(int readings, int acceptablePercentage, unsigned long de
       sumReading += reading;
       validReadings++;
       lastReading = reading;
+      consecutiveRejections = 0;
+    } else {
+      if (consecutiveRejections > 0 && abs(reading - lastRejectedReading) <= (reading * acceptablePercentage) / 100) {
+        consecutiveRejections++;
+      } else {
+        consecutiveRejections = 1;
+        lastRejectedReading = reading;
+      }
+      
+      if (consecutiveRejections >= maxConsecutiveRejections) {
+        sumReading += reading;
+        validReadings++;
+        lastReading = reading;
+        consecutiveRejections = 0;
+      }
     }
     
     delay(delayMs);

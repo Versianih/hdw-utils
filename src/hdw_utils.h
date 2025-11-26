@@ -21,7 +21,7 @@ class Pin {
         void toggle();
 
         void writePwm(uint8_t percent_value = 20);
-        int readNormalizer(int readings = 5, int acceptablePercentage = 20, unsigned long delayMs = 10);
+        int readNormalizer(int readings = 5, int acceptablePercentage = 20, int maxConsecutiveRejections = 3, unsigned long delayMs = 10);
         void tone(unsigned int frequency, unsigned long duration = 0);
         void noTone();
 
