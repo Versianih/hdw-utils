@@ -36,12 +36,31 @@ void Pin::toggle() {
   }
 }
 
-void Pin::writePwm(uint8_t percent_value) {
-  if (_mode_type == OUTPUT) { 
-    if (percent_value > 100) percent_value = 100;
-    uint8_t pwm_value = (percent_value * 255) / 100;
-    analogWrite(_pin, pwm_value);
-  }
+void Pin::pwm(float percent, uint16_t frequency) {
+    if (_mode_type != OUTPUT && _pin_type != DIGITAL) return;
+    
+    percent = constrain(percent, 0.0, 100.0);
+    
+    #ifdef ESP32
+        uint8_t channel = _pin % 16;
+        uint16_t dutyCycle = (uint16_t)((percent / 100.0) * 255.0);
+        
+        ledcSetup(channel, frequency, 8);
+        ledcAttachPin(_pin, channel);
+        ledcWrite(channel, dutyCycle);
+    #else
+        uint8_t pwmValue = (uint8_t)((percent / 100.0) * 255.0);
+        analogWrite(_pin, pwmValue);
+    #endif
+}
+
+void Pin::pwmStop() {
+    #ifdef ESP32
+        uint8_t channel = _pin % 16;
+        ledcDetachPin(_pin);
+    #else
+        analogWrite(_pin, 0);
+    #endif
 }
 
 uint8_t Pin::getPin() const {

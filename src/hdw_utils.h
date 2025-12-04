@@ -20,7 +20,8 @@ class Pin {
         int read();
         void toggle();
 
-        void writePwm(uint8_t percent_value = 20);
+        void pwm(float percent, uint16_t frequency = 1000);
+        void pwmStop();
         int readNormalizer(int readings = 5, int acceptablePercentage = 20, int maxConsecutiveRejections = 3, unsigned long delayMs = 10);
         void tone(unsigned int frequency, unsigned long duration = 0);
         void noTone();
@@ -31,6 +32,8 @@ class Pin {
         uint8_t _pin;
         uint8_t _mode_type;
         uint8_t _pin_type;
+
+        bool _pwmActive;
 };
 
 
