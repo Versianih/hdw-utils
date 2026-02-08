@@ -67,6 +67,10 @@ uint8_t Pin::getPin() const {
   return _pin;
 }
 
+uint8_t Pin::getModeType() const {
+  return _mode_type;
+}
+
 int Pin::readNormalizer(int readings, int acceptablePercentage, int maxConsecutiveRejections, unsigned long delayMs) {
   if (readings == 0 || _pin_type != ANALOG) return 0;
   acceptablePercentage = constrain(acceptablePercentage, 5, 100);

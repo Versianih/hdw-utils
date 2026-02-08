@@ -27,6 +27,7 @@ class Pin {
         void noTone();
 
         uint8_t getPin() const;
+        uint8_t getModeType() const;
 
     private:
         uint8_t _pin;
@@ -37,7 +38,7 @@ class Pin {
 };
 
 
-/* Wait do */
+/* WaitDo */
 
 class WaitDo {
     public:
@@ -56,5 +57,20 @@ class WaitDo {
         int _maxWaitDoTasks;
         WaitDoTask* _waitDoTasks;
 };
+
+
+/* Button */
+
+class Button {
+    public:
+        Button(Pin pin, bool debouncing);
+
+        bool isPressed();
+
+    private:
+        Pin _pin;
+        bool _debouncing;
+        short logicalLevel;
+}
 
 #endif
