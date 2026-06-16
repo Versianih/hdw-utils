@@ -22,16 +22,49 @@ class Pin {
 
         void writePwm(uint8_t percent_value = 20);
         int readNormalizer(int readings = 5, int acceptablePercentage = 20, int maxConsecutiveRejections = 3, unsigned long delayMs = 10);
-        void tone(unsigned int frequency, unsigned long duration = 0);
-        void noTone();
 
         uint8_t getPin() const;
+        uint8_t getModeType() const;
+        uint8_t getPinType() const;
 
     private:
         uint8_t _pin;
         uint8_t _mode_type;
         uint8_t _pin_type;
 };
+
+
+class Buzzer{
+    public:
+        Buzzer(Pin pin);
+        void tone(unsigned int frequency, unsigned long duration = 0);
+        void noTone();
+        
+    private:
+        Pin _pin;
+}
+
+
+class LedRGB{
+    public:
+        LedRGB(Pin pin_red, Pin pin_green, Pin pin_blue);
+
+        void setRGB(uint8_t r, uint8_t g, uint8_t b);
+        void off();
+
+        void red();
+        void green();
+        void blue();
+        void yellow();
+        void orange();
+        void magenta();
+        void purple();
+        void cyan();
+        void white();
+
+    private:
+        Pin _pin_red, _pin_green, _pin_blue;
+}
 
 
 /* Wait do */

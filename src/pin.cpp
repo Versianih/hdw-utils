@@ -48,6 +48,14 @@ uint8_t Pin::getPin() const {
   return _pin;
 }
 
+uint8_t Pin::getModeType() const {
+  return _mode_type;
+}
+
+uint8_t Pin::getPinType() const {
+  return _pin_type;
+}
+
 int Pin::readNormalizer(int readings, int acceptablePercentage, int maxConsecutiveRejections, unsigned long delayMs) {
   if (readings == 0 || _pin_type != ANALOG) return 0;
   acceptablePercentage = constrain(acceptablePercentage, 5, 100);
@@ -91,18 +99,4 @@ int Pin::readNormalizer(int readings, int acceptablePercentage, int maxConsecuti
   }
   
   return sumReading / readings;
-}
-
-void Pin::tone(unsigned int frequency, unsigned long duration) {
-  if (_pin_type != DIGITAL || _mode_type != OUTPUT) return;
-  if (duration == 0) {
-    ::tone(_pin, frequency);
-  } else {
-    ::tone(_pin, frequency, duration);
-  }
-}
-
-void Pin::noTone() {
-  if (_pin_type != DIGITAL || _mode_type != OUTPUT) return;
-  ::noTone(_pin);
 }
