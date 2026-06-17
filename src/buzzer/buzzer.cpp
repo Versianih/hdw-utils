@@ -1,4 +1,4 @@
-#include "hdw_utils.h"
+#include "buzzer.h"
 
 Buzzer::Buzzer(Pin pin): _pin(pin) {}
 
