@@ -2,6 +2,9 @@
 #define DISPLAY_H
 
 #include <Arduino.h>
+#include <LiquidCrystal.h>
+#include <Wire.h>
+
 #include "../pin/pin.h"
 
 #define D16x2     0x0
@@ -22,11 +25,14 @@ public:
     Display(Pin rs, Pin en, Pin d4, Pin d5, Pin d6, Pin d7);
 
     void print(const char* text);
+    void print(const int text);
+    void print(const float text);
     void setCursor(uint8_t col, uint8_t row);
     void clear();
 
 private:
     Pin _rs, _en, _d4, _d5, _d6, _d7;
+    LiquidCrystal _lcd;
 };
 
 
